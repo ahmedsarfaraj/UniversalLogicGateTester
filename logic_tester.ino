@@ -20,10 +20,10 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Truth tables
 const byte TBL_7400_NAND[4] = {1,1,1,0};
-const byte TBL_7408_AND [4] = {0,0,0,1};
-const byte TBL_7432_OR  [4] = {0,1,1,1};
-const byte TBL_7486_XOR [4] = {0,1,1,0};
-const byte TBL_7402_NOR [4] = {1,0,0,0};
+const byte TBL_7408_AND[4] = {0,0,0,1};
+const byte TBL_7432_OR[4] = {0,1,1,1};
+const byte TBL_7486_XOR[4] = {0,1,1,0};
+const byte TBL_7402_NOR[4] = {1,0,0,0};
 
 enum IcType {
   IC_UNKNOWN = 0,
@@ -37,16 +37,13 @@ enum IcType {
 
 IcType currentIC = IC_UNKNOWN;
 
-
-// -----------------------------------------------------
-
 bool patternMatch(const byte a[4], const byte b[4]) {
   for (int i = 0; i < 4; i++)
     if (a[i] != b[i]) return false;
   return true;
 }
 
-// ----------- Detect 7404 NOT gate (pin1=A, pin2=Y) -----------
+//Detect 7404 NOT gate (pin1=A, pin2=Y)
 bool detect7404() {
   pinMode(PIN_IC1, OUTPUT); // A
   pinMode(PIN_IC2, INPUT);  // Y
@@ -62,7 +59,7 @@ bool detect7404() {
   return (y0 == HIGH && y1 == LOW);
 }
 
-// ----------- Test 2-input IC with dynamic mapping -----------
+//Test 2-input IC with dynamic mapping 
 void test2InputIC(byte out[4], int A_PIN, int B_PIN, int Y_PIN) {
   const byte pattern[4][2] = {
     {0,0},{0,1},{1,0},{1,1}
@@ -83,7 +80,7 @@ void test2InputIC(byte out[4], int A_PIN, int B_PIN, int Y_PIN) {
   }
 }j
 
-// ----------- Detect which IC -----------
+//Detect which IC
 IcType detectIC() {
   byte out[4];
 
@@ -107,7 +104,7 @@ IcType detectIC() {
   return IC_UNKNOWN;
 }
 
-// ----------- Expected output Y for IC -----------
+//Expected output Y for IC
 byte expectedY(IcType ic, byte A, byte B) {
   if (ic == IC_7404) return (A==0?1:0);
 
@@ -123,7 +120,7 @@ byte expectedY(IcType ic, byte A, byte B) {
   }
 }
 
-// ----------- Print IC name -----------
+//Print IC name
 void printICName(IcType ic) {
   lcd.clear();
   lcd.setCursor(0,0);
@@ -138,9 +135,7 @@ void printICName(IcType ic) {
   }
 }
 
-// -----------------------------------------------------
 // AUTO MODE
-// -----------------------------------------------------
 void autoMode() {
   lcd.clear();
   lcd.setCursor(0,0);
@@ -167,9 +162,7 @@ void autoMode() {
   delay(2000);
 }
 
-// -----------------------------------------------------
 // MANUAL MODE
-// -----------------------------------------------------
 void manualMode() {
 
   // Detect IC first time only
